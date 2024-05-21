@@ -6,7 +6,7 @@ const Gallery = () => {
     const [gallery, setGallery] = useState([])
 
     useEffect(() => {
-        axios.get(`${baseUrl}gallery`)
+        axios.get(`${baseUrl}auth/gallery`)
             .then((res) => {
                 console.log(res.data);
                 setGallery(res.data);
