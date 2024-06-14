@@ -85,7 +85,7 @@ const AlumniList = () => {
                     <div className="row">
                         {filteredAlumni.map((a, index) => (
                             <div className="col-md-4 mb-4" key={index}>
-                                <div className="card">
+                                <div className="card h-100 shadow-sm">
                                     <center>
                                         {a.avatar ?
                                             <img
@@ -104,6 +104,9 @@ const AlumniList = () => {
                                         <h5 className="card-title text-center pad-zero ">{a.name} <small>
                                             <i className={`badge badge-primary ${a.status === 1 ? '' : 'd-none'}`}>
                                                 Verified
+                                            </i>
+                                            <i className={`badge badge-warning ${a.status === 0 ? '' : 'd-none'}`}>
+                                                Unverified
                                             </i>
                                         </small></h5>
 

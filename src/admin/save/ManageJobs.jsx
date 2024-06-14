@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import { Bounce, ToastContainer, toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
 import ReactQuill from 'react-quill';
 import { baseUrl } from '../../utils/globalurl';
@@ -22,6 +22,8 @@ const ManageJobs = ({ setHandleAdd }) => {
     description: '',
     user_id: uid,
   });
+  const [loading, setLoading] = useState(false);
+  const toastId = useRef(null);
 
   useEffect(() => {
     if (location.state && location.state.action === 'edit') {
@@ -44,15 +46,29 @@ const ManageJobs = ({ setHandleAdd }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoading(true);  // Show loader
+    if (!toastId.current) {
+      toastId.current = toast('📧 Sending emails, please wait...', {
+        position: "top-center",
+        autoClose: false,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    }
+
     try {
       if (location.state && location.state.action === 'edit') {
-        // Perform update operation
         await axios.put(`${baseUrl}auth/managejob`, formData)
-          .then((res) => toast.success(res.data.message))
+          .then((res) => toast.success(res.data.message));
       } else {
-        // Perform insert operation
         await axios.post(`${baseUrl}auth/managejob`, formData)
-          .then((res) => toast.success(res.data.message))
+          .then((res) => toast.success(res.data.message));
       }
       setFormData({
         id: "",
@@ -60,14 +76,33 @@ const ManageJobs = ({ setHandleAdd }) => {
         job_title: "",
         location: "",
         description: "",
-        user_id: ""
-      })
-      // Optionally, you can redirect the user to another page after successful submission
+        user_id: uid,
+      });
     } catch (error) {
       console.error('Error:', error);
       toast.error('An error occurred');
+      // console.error('Error:', error);
+      // if (error.response) {
+      //   // Request was made but server responded with status code outside of 2xx range
+      //   toast.error('Server Error. Please try again later.');
+      // } else if (error.request) {
+      //   // Request was made but no response received (no internet connection)
+      //   toast.warn('No internet connection. Data will be saved locally.');
+      //   // Perform local data storage or any other necessary action
+      // } else {
+      //   // Something else happened while setting up the request
+      //   toast.error('An error occurred. Please try again later.');
+      // }
+
+    } finally {
+      setLoading(false);  // Hide loader
+      if (toastId.current) {
+        toast.dismiss(toastId.current);
+        toastId.current = null;
+      }
     }
   };
+
 
   const handleChangeDesc = (description) => {
     setFormData(prevState => ({
@@ -80,6 +115,15 @@ const ManageJobs = ({ setHandleAdd }) => {
   return (
     <>
       <ToastContainer position="top-center" />
+      {/* {loading && <ToastContainer
+position="top-center"
+autoClose={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss={false}
+draggable
+/> }  */}
       <div className="container-fluid">
         <form onSubmit={handleSubmit}>
           <input type="hidden" name="id" value={formData.id} className="form-control" />
