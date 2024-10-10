@@ -41,15 +41,6 @@ The Alumni Management System has been developed with the following key features:
 - **server/**: Contains the backend code developed in Node.js and Express.js.
   - **alumni_db.sql**: SQL database file containing site data.
 
-## 🚀 Getting Started
-
-To set up the Alumni Management System locally, follow these steps:
-
-1. Clone the repository: `git clone https://github.com/ranajunaidhashim/Alumni-SERN.git`
-2. Navigate to the `frontend` folder and install dependencies: `cd frontend && npm install`
-3. Navigate to the `server` folder and install dependencies: `cd ../server && npm install`
-4. Import the `alumni_db.sql` file into your SQL database.
-5. Configure the server to connect to your database.
 6. Start the frontend and backend servers with these commands: `npm run dev` in `frontend` and `npm start` in `server` folder.
 
 ## 🤝 Contributing
